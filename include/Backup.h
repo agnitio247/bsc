@@ -1,3 +1,4 @@
 #pragma once
 
-int copy(const char* src, const char* dest);
+int Backup(const char* source, const char* dest);
+int Copy(const char* source, const char* dest);

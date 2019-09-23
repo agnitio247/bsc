@@ -1,2 +1,2 @@
-bsc: src/bsc.cpp src/Backup.cpp
-	g++ -o bsc src/bsc.cpp src/Backup.cpp -ggdb3
+bsc: src/bsc.cpp src/Backup.cpp src/Functions.cpp
+	g++ -o bsc src/bsc.cpp src/Backup.cpp src/Functions.cpp -ggdb3
