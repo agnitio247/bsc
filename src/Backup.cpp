@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <filesystem>
-#include <cstring>
+#include <stdio.h>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -16,6 +16,7 @@ using namespace std;
 #endif
 
 int Copy(const char* source, const char* dest) {
+  cout << dest << endl;
   string line;
   ifstream inFile {source};
   ofstream outFile {dest};
@@ -23,26 +24,25 @@ int Copy(const char* source, const char* dest) {
     while(getline(inFile, line)) {
       outFile << line << endl;
     }
-  } else {
-    return 1;
+    return 0;
   }
+  return 1;
 }
 
 int Backup(const char* source, const char* dest) {
   string output;
   output.append(dest);
   output.append(SEPERATOR);
-  output.append(split(source, *SEPERATOR, -1));
-  path sourceFilePath(source);
-  path destFilePath(dest);
-  if (is_directory(sourceFilePath) && !exists(destFilePath)) {
+  output.append(Split(source, *SEPERATOR, -1));
+  if (IsDir(source)) {
 #ifdef _WIN32
-    _mkdir(output);
+    _mkdir(output.c_str());
 #else
-    mkdir(output, 0777);
+    mkdir(output.c_str(), 0700);
+    cout << "created dir" << endl;
 #endif
-  } else if (is_regular_file(sourceFilePath)) {
-    Copy(source, output);
+  } else if (IsFile(source)) {
+    return Copy(source, output.c_str());
   }
   return 0;
 }

@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
+#include <sys/stat.h>
 
 using namespace std;
 
-const char* split(const char* input, char seperator, int id) {
+const char* Split(const char* input, char seperator, int id) {
   int inputLength = 0;
   // get length of input string
   while (input[inputLength] != '\0') {
@@ -36,4 +37,24 @@ const char* split(const char* input, char seperator, int id) {
   }
   const char* output = tempOutput.c_str();
   return output;
+}
+
+bool IsDir(const char* path) {
+  struct stat pathStat;
+  stat(path, &pathStat);
+  if (S_ISDIR(pathStat.st_mode) == 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+bool IsFile(const char* path) {
+  struct stat pathStat;
+  stat(path, &pathStat);
+  if (S_ISREG(pathStat.st_mode) == 0) {
+    return false;
+  } else {
+    return true;
+  }
 }

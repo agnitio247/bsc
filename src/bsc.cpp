@@ -7,6 +7,6 @@ using namespace std;
 #include "../include/Functions.h"
 
 int main(int argc, char const *argv[]) {
-  Backup("test.txt", "test1.txt");
+  if (Backup("/home/alex/Documents/git", "/home/alex/Documents/Backup"))
   return 0;
 }
