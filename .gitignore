@@ -1,3 +1,6 @@
 test.cpp
 test
 *.txt
+bsc
+*.out
+*.exe
