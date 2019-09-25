@@ -16,7 +16,6 @@ using namespace std;
 #endif
 
 int Copy(const char* source, const char* dest) {
-  cout << dest << endl;
   string line;
   ifstream inFile {source};
   ofstream outFile {dest};
@@ -33,13 +32,12 @@ int Backup(const char* source, const char* dest) {
   string output;
   output.append(dest);
   output.append(SEPERATOR);
-  output.append(Split(source, *SEPERATOR, -1));
+  output.append(Split(source, SEPERATOR[0], -1));
   if (IsDir(source)) {
 #ifdef _WIN32
     _mkdir(output.c_str());
 #else
     mkdir(output.c_str(), 0700);
-    cout << "created dir" << endl;
 #endif
   } else if (IsFile(source)) {
     return Copy(source, output.c_str());

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sys/stat.h>
+#include <cstring>
 
 using namespace std;
 
@@ -35,7 +36,10 @@ const char* Split(const char* input, char seperator, int id) {
       tempOutput.append(1, input[i]);
     }
   }
-  const char* output = tempOutput.c_str();
+  // convert string to const char*
+  char* foo = new char[tempOutput.length()+1];
+  strcpy(foo, tempOutput.c_str());
+  const char* output = foo;
   return output;
 }
 
