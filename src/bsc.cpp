@@ -8,10 +8,12 @@ using namespace std;
 #include "../include/Functions.h"
 
 int main(int argc, char const *argv[]) {
-  int size;
-  string* dirContent = ListDir("/home/alex/Documents", &size);
-  for (int i = 0; i < size; i++) {
-    cout << dirContent[i] << endl;
+  string source = "/home/alex/Documents";
+  string dest = "/home/alex/Desktop";
+  if (Backup(source, dest, true) == 0) {
+    cout << "Backup successful" << endl;
+  } else {
+    cout << "an error occured" << endl;
   }
   return 0;
 }
