@@ -2,15 +2,14 @@
 #include <string>
 #include <sys/stat.h>
 #include <cstring>
+#include <dirent.h>
 
 using namespace std;
 
-const char* Split(const char* input, char seperator, int id) {
-  int inputLength = 0;
-  // get length of input string
-  while (input[inputLength] != '\0') {
-    inputLength++;
-  }
+#include "../include/LinkedList.h"
+
+string Split(string input, char seperator, int id) {
+  int inputLength = input.length();
   // get number of seperator in input string
   int seperatorCount = 0;
   for (int i = 0; i < inputLength; i++) {
@@ -21,7 +20,7 @@ const char* Split(const char* input, char seperator, int id) {
   if (id < 0) {
     id = seperatorCount + 1 + id;
   }
-  string tempOutput;
+  string output;
   for (int i = 0; i < inputLength; i++) {
     if (input[i] == seperator) {
       id -= 1;
@@ -33,19 +32,15 @@ const char* Split(const char* input, char seperator, int id) {
     }
     // once at right place in string
     if (id == 0) {
-      tempOutput.append(1, input[i]);
+      output.append(1, input[i]);
     }
   }
-  // convert string to const char*
-  char* foo = new char[tempOutput.length()+1];
-  strcpy(foo, tempOutput.c_str());
-  const char* output = foo;
   return output;
 }
 
-bool IsDir(const char* path) {
+bool IsDir(string path) {
   struct stat pathStat;
-  stat(path, &pathStat);
+  stat(path.c_str(), &pathStat);
   if (S_ISDIR(pathStat.st_mode) == 0) {
     return false;
   } else {
@@ -53,12 +48,31 @@ bool IsDir(const char* path) {
   }
 }
 
-bool IsFile(const char* path) {
+bool IsFile(string path) {
   struct stat pathStat;
-  stat(path, &pathStat);
+  stat(path.c_str(), &pathStat);
   if (S_ISREG(pathStat.st_mode) == 0) {
     return false;
   } else {
     return true;
   }
+}
+
+string* ListDir(string path, int *size) {
+  linkedList *list = new linkedList();
+  struct dirent *entry;
+  DIR *dir = opendir(path.c_str());
+  while ((entry = readdir(dir)) != NULL) {
+    list->Add(entry->d_name);
+  }
+  list->RemoveValue("..");
+  list->RemoveValue(".");
+  string *output = new string[list->GetSize()];
+  for (int i = 0; i < list->GetSize(); i++) {
+    output[i] = list->GetValue(i);
+  }
+  *size = list->GetSize();
+  closedir(dir);
+  delete list;
+  return output;
 }

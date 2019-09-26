@@ -1,5 +1,6 @@
 #pragma once
 
-const char* Split(const char* input, char seperator, int id);
-bool IsDir(const char* path);
-bool IsFile(const char* path);
+string Split(string input, char seperator, int id);
+bool IsDir(string path);
+bool IsFile(string path);
+string* ListDir(string path, int *size);

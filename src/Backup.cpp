@@ -15,7 +15,7 @@ using namespace std;
   #define SEPERATOR "\\"
 #endif
 
-int Copy(const char* source, const char* dest) {
+int Copy(string source, string dest) {
   string line;
   ifstream inFile {source};
   ofstream outFile {dest};
@@ -28,7 +28,7 @@ int Copy(const char* source, const char* dest) {
   return 1;
 }
 
-int Backup(const char* source, const char* dest) {
+int Backup(string source, string dest) {
   string output;
   output.append(dest);
   output.append(SEPERATOR);
@@ -40,7 +40,7 @@ int Backup(const char* source, const char* dest) {
     mkdir(output.c_str(), 0700);
 #endif
   } else if (IsFile(source)) {
-    return Copy(source, output.c_str());
+    return Copy(source, output);
   }
   return 0;
 }

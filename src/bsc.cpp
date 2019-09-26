@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
-
-#define SEPERATOR '/'
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -9,10 +8,10 @@ using namespace std;
 #include "../include/Functions.h"
 
 int main(int argc, char const *argv[]) {
-  if (Backup("/home/alex/Documents/git/bsc/test.txt", "/home/alex/Documents/Backup") == 0) {
-    cout << "Done" << endl;
-  } else {
-    cout << "Something went wrong" << endl;
+  int size;
+  string* dirContent = ListDir("/home/alex/Documents", &size);
+  for (int i = 0; i < size; i++) {
+    cout << dirContent[i] << endl;
   }
   return 0;
 }
