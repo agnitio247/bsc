@@ -1,6 +1,7 @@
 test.cpp
-test
+test/*
 *.txt
 bsc
 *.out
 *.exe
+build

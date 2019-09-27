@@ -2,7 +2,6 @@
 #include <fstream>
 #include <stdio.h>
 #include <sys/stat.h>
-#include <direct.h>
 
 using namespace std;
 
@@ -15,6 +14,7 @@ using namespace std;
 #endif
 #ifdef _WIN32
   #define SEPERATOR "\\"
+  #include <direct.h>
 #endif
 
 int Copy(string source, string dest) {

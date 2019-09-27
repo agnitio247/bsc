@@ -8,8 +8,8 @@ using namespace std;
 #include "../include/Functions.h"
 
 int main(int argc, char const *argv[]) {
-  string source = "C:\\Users\\asylv\\Documents";
-  string dest = "C:\\Users\\asylv\\Desktop";
+  string source = "/home/alex/Documents";
+  string dest = "/home/alex/Desktop";
   if (Backup(source, dest, true) == 0) {
     cout << "Backup successful" << endl;
   } else {
