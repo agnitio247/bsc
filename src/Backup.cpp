@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <direct.h>
 
 using namespace std;
 
