@@ -4,4 +4,4 @@ test/*
 bsc
 *.out
 *.exe
-build
+build/*

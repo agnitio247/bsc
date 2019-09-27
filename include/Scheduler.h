@@ -1,4 +1,4 @@
 #pragma once
 
-struct day;
-day* weekDays;
+string GetDay(int id);
+int GetDayId(string day);
