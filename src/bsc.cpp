@@ -1,14 +1,20 @@
 #include <iostream>
 #include <string>
 #include <sys/stat.h>
+#include <unistd.h>
+#include <ctime>
 
 using namespace std;
 
 #include "../include/Backup.h"
 #include "../include/Functions.h"
 #include "../include/Scheduler.h"
+#include "../include/Config.h"
 
 int main(int argc, char const *argv[]) {
+	string source = "/home/alex/Pictures";
+	string dest = "/home/alex/Desktop";
+
 	string currentDayTime[] = {
 		"20:25:52",
 	};
@@ -45,7 +51,13 @@ int main(int argc, char const *argv[]) {
 	};
 
 	int backupsSize = sizeof(backups)/sizeof(backups[0]);
-
-	schedule nextBackup = GetNextBackup(currentDay, backups, backupsSize);
+	int sleepTime;
+	schedule nextBackup = GetNextBackup(currentDay, backups, backupsSize, &sleepTime);
+	cout << sleepTime << endl;
+	if (Backup(source, dest, false) == 0) {
+		cout << "Backup done in " << endl;
+	} else {
+		cout << "Something went wrong..." << endl;
+	}
 	return 0;
 }

@@ -44,7 +44,7 @@ int Backup(string source, string dest, bool verbose) {
   linkedList *files = new linkedList();
   linkedList *dirs = new linkedList();
   int dirContentSize;
-  string *dirContent = ListDir(source, &dirContentSize);
+  string *dirContent = ListDir(source, &dirContentSize); // TODO : pass by reference instead
   string newSource, newDest;
   for (int i = 0; i < dirContentSize; i++) {
     newSource = source + SEPERATOR + dirContent[i];
@@ -61,5 +61,8 @@ int Backup(string source, string dest, bool verbose) {
       }
     }
   }
+  delete[] dirContent;
+  delete files;
+  delete dirs;
   return 0;
 }

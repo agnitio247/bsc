@@ -58,6 +58,7 @@ bool IsFile(string path) {
   }
 }
 
+// TODO : fix mem leak
 string* ListDir(string path, int *size) {
   linkedList *list = new linkedList();
   struct dirent *entry;

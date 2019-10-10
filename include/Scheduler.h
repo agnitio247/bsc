@@ -16,4 +16,4 @@ schedule GetClosestDay(schedule currentDay, schedule* backups, int backupsSize, 
 string GetClosestTime(schedule currentDay, schedule targetDay, int daysLeft);
 int GetTimeLeft(schedule currentDay, schedule targetDay, int timeStamp);
 
-schedule GetNextBackup(schedule currentDay, schedule *backups, int backupsSize);
+schedule GetNextBackup(schedule currentDay, schedule *backups, int backupsSize, int *timeLeft);

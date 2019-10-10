@@ -95,7 +95,7 @@ string GetClosestTime(schedule currentDay, schedule targetDay, int daysLeft) {
   return lowerTimeStampTime;
 }
 
-schedule GetNextBackup(schedule currentDay, schedule *backups, int backupsSize) {
+schedule GetNextBackup(schedule currentDay, schedule *backups, int backupsSize, int *timeLeft) {
   int daysLeft;
 	schedule closestDay = GetClosestDay(currentDay, backups, backupsSize, &daysLeft);
 	string closestTime = GetClosestTime(currentDay, closestDay, daysLeft);
@@ -105,5 +105,6 @@ schedule GetNextBackup(schedule currentDay, schedule *backups, int backupsSize) 
 		nextBackupTime,
 		1
 	};
+  *timeLeft = GetTimeLeft(currentDay, nextBackup, daysLeft);
 	return nextBackup;
 }

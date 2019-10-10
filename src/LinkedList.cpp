@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -13,6 +14,10 @@ struct node {
 linkedList::linkedList() {
   head = NULL;
   tail = NULL;
+}
+
+linkedList::~linkedList() {
+  this->Free();
 }
 
 bool linkedList::is_empty() {
@@ -35,7 +40,7 @@ void linkedList::Add(string value) {
 }
 
 string linkedList::GetValue(int id) {
-  node *temp = new node;
+  node *temp;
   temp = head;
   for (int i = 0; i < id; i++) {
     temp = temp->next;
@@ -45,8 +50,7 @@ string linkedList::GetValue(int id) {
 }
 
 void linkedList::Print() {
-  node *temp = new node;
-  temp = head;
+  node *temp = head;
   if (this->is_empty()) {
     cout << "List is empty" << endl;
   } else {
@@ -58,7 +62,7 @@ void linkedList::Print() {
 }
 
 int linkedList::GetSize() {
-  node *temp = new node;
+  node *temp;
   temp = head;
   if (this->is_empty()) {
     return 0;
@@ -76,22 +80,35 @@ int linkedList::GetSize() {
 int linkedList::RemoveValue(string value) {
   if (this->is_empty()) {
     return 1;
-  } else {
-    if (head->data == value) {
-      node *temp = new node;
-      temp = head;
-      head = head->next;
-      delete temp;
-      return 0;
-    }
-    node *current = new node;
-    node *previous = new node;
-    current = head;
-    while (current->data != value) {
-      previous = current;
-      current = current->next;
-    }
-    previous->next = current->next;
   }
+  if (head->data == value) {
+    node *temp;
+    temp = head;
+    head = head->next;
+    delete temp;
+    return 0;
+  }
+  node *previous, *current, *next;
+  previous = head;
+  current = head->next;
+  next = current->next;
+  while (current->data != value) {
+    previous = current;
+    current = next;
+    next = next->next;
+  }
+  delete current;
+  previous->next = next;
   return 0;
+}
+
+void linkedList::Free() {
+  node *current;
+  node *previous;
+  current = head;
+  while (current != NULL) {
+    previous = current;
+    current = current->next;
+    delete previous;
+  }
 }

@@ -5,10 +5,10 @@ IDIR = include
 ODIR = build
 SDIR = src
 
-_INC = Backup.h LinkedList.h Functions.h Scheduler.h
+_INC = Backup.h LinkedList.h Functions.h Scheduler.h Config.h
 INC = $(patsubst %,$(IDIR)/%,$(_INC))
 
-_OBJ = bsc.o Backup.o LinkedList.o Functions.o Scheduler.o
+_OBJ = bsc.o Backup.o LinkedList.o Functions.o Scheduler.o Config.o 
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 bsc: $(OBJ)
