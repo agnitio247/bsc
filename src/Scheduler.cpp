@@ -99,7 +99,8 @@ schedule GetNextBackup(schedule currentDay, schedule *backups, int backupsSize, 
   int daysLeft;
 	schedule closestDay = GetClosestDay(currentDay, backups, backupsSize, &daysLeft);
 	string closestTime = GetClosestTime(currentDay, closestDay, daysLeft);
-	string nextBackupTime[] = {closestTime};
+	string *nextBackupTime = new string[1];
+  nextBackupTime[0] = closestTime;
 	schedule nextBackup = {
 		closestDay.day,
 		nextBackupTime,

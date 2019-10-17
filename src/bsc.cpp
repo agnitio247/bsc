@@ -3,7 +3,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <ctime>
+#include <chrono>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -12,20 +14,18 @@ using namespace std;
 #include "../include/Scheduler.h"
 #include "../include/LinkedList.h"
 
-int main(int argc, char const *argv[]) {
-	string currentDayTime[] = {
-		"20:25:52",
-	};
-	schedule currentDay = {
-		"Sunday",
-		currentDayTime,
-		1
-	};
+#ifdef __linux__
+  #define CLEAR "clear"
+#endif
+#ifdef _WIN32
+	#define CLEAR "cls"
+#endif
 
-	// parse config (fucks up if put in function cuz memory stuff)
+int main(int argc, char const *argv[]) {
+	// parse config
 	string filePath = "doc/bsc.conf";
-	linkedList *backupDirs = new linkedList();
-  linkedList *schedules = new linkedList();
+	linkedList backupDirs;
+  linkedList schedules;
   ifstream in(filePath);
   if (!in.is_open()) {
     cerr << "Error: unable to open file" << endl;
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]) {
           is_dir = false;
         } else if (is_day) {
           is_day = false;
-          schedules->Add("SEPERATOR");
+          schedules.Add("SEPERATOR");
         }
       } else if (line == "Output") {
         is_output = true;
@@ -54,7 +54,7 @@ int main(int argc, char const *argv[]) {
         is_dir = true;
       } else {
         if (is_dir) {
-          backupDirs->Add(line);
+          backupDirs.Add(line);
         } else if (is_output) {
           output = line;
         } else {
@@ -62,12 +62,12 @@ int main(int argc, char const *argv[]) {
             is_day = true;
             dayCounter++;
           }
-          schedules->Add(line);
+          schedules.Add(line);
         }
       }
     }
   }
-  schedules->Add("SEPERATOR");
+  schedules.Add("SEPERATOR");
 
 	// parse schedules
   is_day = true;
@@ -76,15 +76,14 @@ int main(int argc, char const *argv[]) {
   string dayName;
   linkedList *dayTimes;
   string *backupsTimes;
-  schedule *scheduleDay;
+  schedule scheduleDay;
   string value;
-  schedule **backups = new schedule*[dayCounter];
+  schedule backups[dayCounter];
   int scheduleDayId = 0;
-  for (int i = 0; i < schedules->GetSize(); i++) {
-    value = schedules->GetValue(i);
+  for (int i = 0; i < schedules.GetSize(); i++) {
+    value = schedules.GetValue(i);
     if (value != "SEPERATOR") {
       if (is_day) { // value == day name
-        cout << "day: " << value << endl;
         dayName = value;
         is_day = false;
       } else { // value == time
@@ -94,43 +93,74 @@ int main(int argc, char const *argv[]) {
         }
         dayTimes->Add(value);
         timeCounter++;
-        cout << "time: " << value << endl;
       }
     } else { // end of backup schedule
-      scheduleDay = new schedule;
-      scheduleDay->day = dayName;
-      scheduleDay->size = timeCounter;
+      scheduleDay.day = dayName;
+      scheduleDay.size = timeCounter;
       backupsTimes = new string[timeCounter];
       for (int j = 0; j < dayTimes->GetSize(); j++) {
         backupsTimes[j] = dayTimes->GetValue(j);
       }
       delete dayTimes;
-      scheduleDay->time = backupsTimes;
+      scheduleDay.time = backupsTimes;
       backups[scheduleDayId] = scheduleDay;
       is_day = true;
       is_init = false;
       timeCounter = 0;
       scheduleDayId++;
-      cout << endl;
     }
   }
-  delete schedules;
-	/*
+
+	// TODO : better verbose
 	int sleepTime;
-	schedule nextBackup = GetNextBackup(currentDay, backups, dayCounter, &sleepTime);
-	cout << sleepTime << endl;
-	// sleep(sleepTime);
-	for (int i = 0; i < backupDirs->GetSize(); i++) {
-		if (Backup(backupDirs->GetValue(i), output, false) == 1) {
-			cout << "An error occured" << endl;
+	schedule nextBackup;
+	schedule currentDay;
+	string currentDayDay;
+	string currentDayTime;
+	auto currentTime = std::chrono::system_clock::now();
+	time_t currentTime_t;
+
+	system(CLEAR);
+	while (true) {
+		currentTime = std::chrono::system_clock::now();
+		currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+		currentDayDay = Split(ctime(&currentTime_t), ' ', 0);
+		if (currentDayDay == "Wed") {
+			currentDayDay = currentDayDay + "nesday";
+		} else if (currentDayDay == "Sat") {
+			currentDayDay = currentDayDay + "urday";
+		} else if (currentDayDay == "Thu") {
+			currentDayDay = currentDayDay + "rsday";
+		} else if (currentDayDay == "Tue") {
+			currentDayDay = currentDayDay + "sday";
+		} else {
+			currentDayDay = currentDayDay + "day";
 		}
+		currentDayTime = Split(ctime(&currentTime_t), ' ', -2);
+		currentDay.day = currentDayDay;
+		string currentDayTimeArray[] = {currentDayTime};
+		currentDay.time = currentDayTimeArray;
+		currentDay.size = 1;
+
+		nextBackup = GetNextBackup(currentDay, backups, dayCounter, &sleepTime);
+
+		cout << "Next backup " << nextBackup.day << " at " << nextBackup.time[0] << "..." << endl;
+
+		sleep(sleepTime);
+		cout << endl;
+		for (int i = 0; i < backupDirs.GetSize(); i++) {
+			cout << backupDirs.GetValue(i) << endl;
+			if (Backup(backupDirs.GetValue(i), output, false) == 1) {
+				cout << "An error occured" << endl;
+			}
+		}
+		delete[] nextBackup.time;
+		cout << "Done" << endl;
+		cout << endl;
 	}
-	*/
-	delete backupDirs;
+
 	for (int i = 0; i < dayCounter; i++) {
-		delete[] backups[i]->time;
-		delete backups[i];
+		delete[] backups[i].time;
 	}
-	delete[] backups;
 	return 0;
 }
