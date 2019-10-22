@@ -15,6 +15,7 @@ using namespace std;
 #ifdef _WIN32
   #define SEPERATOR "\\"
   #include <direct.h>
+  #include <windows.h>
 #endif
 
 int Copy(string source, string dest) {
@@ -27,6 +28,8 @@ int Copy(string source, string dest) {
     }
     return 0;
   }
+  inFile.close();
+  outFile.close();
   return 1;
 }
 
@@ -55,7 +58,12 @@ int Backup(string source, string dest, bool verbose) {
       }
       return 1;
     } else if (IsFile(newSource)) {
+#ifdef __linux__
       Copy(newSource, newDest);
+#endif
+#ifdef _WIN32
+      CopyFile(newSource, newDest, FALSE);
+#endif
       if (verbose == 1) {
         cout << newSource << endl;
       }

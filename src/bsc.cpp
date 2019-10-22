@@ -14,12 +14,7 @@ using namespace std;
 #include "../include/Scheduler.h"
 #include "../include/LinkedList.h"
 
-#ifdef __linux__
-  #define CLEAR "clear"
-#endif
-#ifdef _WIN32
-	#define CLEAR "cls"
-#endif
+// TODO : fix bug where program crashes if there is no time before current time 
 
 int main(int argc, char const *argv[]) {
 	// parse config
@@ -120,7 +115,6 @@ int main(int argc, char const *argv[]) {
 	auto currentTime = std::chrono::system_clock::now();
 	time_t currentTime_t;
 
-	system(CLEAR);
 	while (true) {
 		currentTime = std::chrono::system_clock::now();
 		currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
@@ -150,7 +144,7 @@ int main(int argc, char const *argv[]) {
 		cout << endl;
 		for (int i = 0; i < backupDirs.GetSize(); i++) {
 			cout << backupDirs.GetValue(i) << endl;
-			if (Backup(backupDirs.GetValue(i), output, false) == 1) {
+			if (Backup(backupDirs.GetValue(i), output, true) == 1) {
 				cout << "An error occured" << endl;
 			}
 		}
