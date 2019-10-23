@@ -62,7 +62,7 @@ int Backup(string source, string dest, bool verbose) {
       Copy(newSource, newDest);
 #endif
 #ifdef _WIN32
-      CopyFile(newSource, newDest, FALSE);
+      CopyFile(newSource.c_str(), newDest.c_str(), FALSE);
 #endif
       if (verbose == 1) {
         cout << newSource << endl;

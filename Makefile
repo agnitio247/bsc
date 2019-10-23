@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -ggdb3
+CFLAGS = -ggdb3 -static-libgcc -static-libstdc++
 
 IDIR = include
 ODIR = build
