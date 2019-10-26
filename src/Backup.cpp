@@ -18,19 +18,11 @@ using namespace std;
   #include <windows.h>
 #endif
 
-int Copy(string source, string dest) {
-  string line;
-  ifstream inFile {source};
-  ofstream outFile {dest};
-  if (inFile && outFile) {
-    while(getline(inFile, line)) {
-      outFile << line << endl;
-    }
-    return 0;
-  }
-  inFile.close();
-  outFile.close();
-  return 1;
+int Copy(string source, string dest)  {
+  ifstream src(source, ios::binary);
+  ofstream dst(dest, ios::binary);
+  dst << src.rdbuf();
+  return 0;
 }
 
 int Backup(string source, string dest, bool verbose) {
@@ -47,7 +39,7 @@ int Backup(string source, string dest, bool verbose) {
   linkedList *files = new linkedList();
   linkedList *dirs = new linkedList();
   int dirContentSize;
-  string *dirContent = ListDir(source, &dirContentSize); // TODO : pass by reference instead
+  string *dirContent = ListDir(source, &dirContentSize);
   string newSource, newDest;
   for (int i = 0; i < dirContentSize; i++) {
     newSource = source + SEPERATOR + dirContent[i];
@@ -57,15 +49,16 @@ int Backup(string source, string dest, bool verbose) {
         continue;
       }
       return 1;
-    } else if (IsFile(newSource)) {
+    } else if (IsFile(newSource) && !CompareFiles(newSource, newDest)) {
 #ifdef __linux__
       Copy(newSource, newDest);
 #endif
 #ifdef _WIN32
       CopyFile(newSource.c_str(), newDest.c_str(), FALSE);
 #endif
-      if (verbose == 1) {
-        cout << newSource << endl;
+      if (verbose) {
+        cout << "[ " << source << " ]" << "\t";
+        cout << Split(newSource, SEPERATOR[0], -1) << endl;
       }
     }
   }

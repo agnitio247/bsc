@@ -14,7 +14,7 @@ using namespace std;
 #include "../include/Scheduler.h"
 #include "../include/LinkedList.h"
 
-// TODO : fix bug where program crashes if there is no time before current time 
+// TODO : fix bug where program crashes if there is no time before current time
 
 int main(int argc, char const *argv[]) {
 	// parse config
@@ -143,13 +143,12 @@ int main(int argc, char const *argv[]) {
 		sleep(sleepTime);
 		cout << endl;
 		for (int i = 0; i < backupDirs.GetSize(); i++) {
-			cout << backupDirs.GetValue(i) << endl;
 			if (Backup(backupDirs.GetValue(i), output, true) == 1) {
 				cout << "An error occured" << endl;
 			}
+			cout << endl;
 		}
 		delete[] nextBackup.time;
-		cout << "Done" << endl;
 		cout << endl;
 	}
 

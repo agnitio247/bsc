@@ -3,6 +3,9 @@
 #include <sys/stat.h>
 #include <cstring>
 #include <dirent.h>
+#include <fstream>
+#include <iterator>
+#include <algorithm>
 
 using namespace std;
 
@@ -76,4 +79,20 @@ string* ListDir(string path, int *size) {
   closedir(dir);
   delete list;
   return output;
+}
+
+bool CompareFiles(string &p1, string &p2) {
+  ifstream f1(p1, ifstream::binary|ifstream::ate);
+  ifstream f2(p2, ifstream::binary|ifstream::ate);
+  if (f1.fail() || f2.fail()) {
+    return false; //file problem
+  }
+  if (f1.tellg() != f2.tellg()) {
+    return false; //size mismatch
+  }
+  f1.seekg(0, ifstream::beg);
+  f2.seekg(0, ifstream::beg);
+  return equal(istreambuf_iterator<char>(f1.rdbuf()),
+                    istreambuf_iterator<char>(),
+                    istreambuf_iterator<char>(f2.rdbuf()));
 }
