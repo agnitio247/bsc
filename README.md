@@ -1,2 +1,2 @@
 # bsc
-## Backup scheduler written in c 
+## Simple program to schedule backups  
